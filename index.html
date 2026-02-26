@@ -26,11 +26,17 @@ header {
   font-weight: bold;
 }
 
-.cart {
+.cart-icon {
   background: white;
   color: black;
-  padding: 5px 10px;
+  padding: 8px 15px;
   border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cart-icon:hover {
+  background: #ddd;
 }
 
 .hero {
@@ -86,6 +92,114 @@ footer {
   text-align: center;
   padding: 20px;
 }
+
+/* Modal Panier */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+}
+
+.close-btn {
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.close-btn:hover {
+  color: red;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.cart-item-info {
+  text-align: left;
+}
+
+.cart-item-name {
+  font-weight: bold;
+}
+
+.cart-item-price {
+  color: #666;
+  font-size: 14px;
+}
+
+.remove-btn {
+  background: red;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.remove-btn:hover {
+  background: darkred;
+}
+
+.cart-empty {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.cart-total {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #000;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.checkout-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  background: green;
+  font-size: 16px;
+}
+
+.checkout-btn:hover {
+  background: darkgreen;
+}
 </style>
 </head>
 
@@ -93,7 +207,7 @@ footer {
 
 <header>
   <div class="logo">Las.kys</div>
-  <div class="cart">Panier 🛒 : <span id="cart-count">0</span></div>
+  <div class="cart-icon" onclick="openCart()">🛒 Panier (<span id="cart-count">0</span>)</div>
 </header>
 
 <section class="hero">
@@ -106,23 +220,38 @@ footer {
     <img src="tshirt1.jpg" alt="T-shirt noir Las.kys">
     <h2>T-shirt Noir Minimal</h2>
     <p class="price">29,99€</p>
-    <button onclick="addToCart()">Ajouter au panier</button>
+    <button onclick="addToCart('T-shirt Noir Minimal', 29.99)">Ajouter au panier</button>
   </div>
 
   <div class="product">
     <img src="tshirt2.jpg" alt="T-shirt blanc Las.kys">
     <h2>T-shirt Blanc Street</h2>
     <p class="price">34,99€</p>
-    <button onclick="addToCart()">Ajouter au panier</button>
+    <button onclick="addToCart('T-shirt Blanc Street', 34.99)">Ajouter au panier</button>
   </div>
 
   <div class="product">
     <img src="tshirt3.jpg" alt="T-shirt beige Las.kys">
     <h2>T-shirt Beige Luxe</h2>
     <p class="price">39,99€</p>
-    <button onclick="addToCart()">Ajouter au panier</button>
+    <button onclick="addToCart('T-shirt Beige Luxe', 39.99)">Ajouter au panier</button>
   </div>
 </section>
+
+<!-- Modal Panier -->
+<div id="cartModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Mon Panier 🛒</h2>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="cart-total">
+      Total: <span id="totalPrice">0,00€</span>
+    </div>
+    <button class="checkout-btn" onclick="checkout()">Passer la commande</button>
+  </div>
+</div>
 
 <footer>
   <p>Contact : kylianengoki@gmail.com</p>
@@ -130,10 +259,82 @@ footer {
 </footer>
 
 <script>
-let cart = 0;
-function addToCart() {
-  cart++;
-  document.getElementById("cart-count").textContent = cart;
+let cart = [];
+
+function addToCart(name, price) {
+  cart.push({ name, price, id: Date.now() });
+  document.getElementById("cart-count").textContent = cart.length;
+  updateCartDisplay();
+  alert(
+    `${name} ajouté au panier !`
+  );
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  document.getElementById("cart-count").textContent = cart.length;
+  updateCartDisplay();
+}
+
+function updateCartDisplay() {
+  const cartItemsDiv = document.getElementById("cartItems");
+  
+  if (cart.length === 0) {
+    cartItemsDiv.innerHTML = '<div class="cart-empty">Votre panier est vide 😢</div>';
+    document.getElementById("totalPrice").textContent = "0,00€";
+    return;
+  }
+  
+  let html = '';
+  let total = 0;
+  
+  cart.forEach(item => {
+    html += `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">${item.price.toFixed(2)}€</div>
+        </div>
+        <button class="remove-btn" onclick="removeFromCart(${item.id})">Supprimer</button>
+      </div>
+    `;
+    total += item.price;
+  });
+  
+  cartItemsDiv.innerHTML = html;
+  document.getElementById("totalPrice").textContent = total.toFixed(2) + "€";
+}
+
+function openCart() {
+  document.getElementById("cartModal").classList.add("active");
+}
+
+function closeCart() {
+  document.getElementById("cartModal").classList.remove("active");
+}
+
+function checkout() {
+  if (cart.length === 0) {
+    alert("Votre panier est vide !");
+    return;
+  }
+  
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  alert(
+    `Merci pour votre commande !\nTotal: ${total.toFixed(2)}€\n\nCette fonctionnalité de paiement sera bientôt disponible.`
+  );
+  cart = [];
+  document.getElementById("cart-count").textContent = "0";
+  updateCartDisplay();
+  closeCart();
+}
+
+// Fermer le modal en cliquant en dehors
+window.onclick = function(event) {
+  const modal = document.getElementById("cartModal");
+  if (event.target === modal) {
+    modal.classList.remove("active");
+  }
 }
 </script>
 
