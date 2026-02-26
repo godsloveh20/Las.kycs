@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma Boutique</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f4f4;
+}
+header {
+  background: #111;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+.product {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+}
+button {
+  background: black;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  background: #444;
+}
+footer {
+  text-align: center;
+  padding: 15px;
+  background: #111;
+  color: white;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Ma Boutique</h1>
+<p>Bienvenue dans notre boutique en ligne</p>
+</header>
+
+<section class="products">
+  <div class="product">
+    <h2>Produit 1</h2>
+    <p>Prix: 20€</p>
+    <button onclick="alert('Produit ajouté au panier')">Acheter</button>
+  </div>
+
+  <div class="product">
+    <h2>Produit 2</h2>
+    <p>Prix: 35€</p>
+    <button onclick="alert('Produit ajouté au panier')">Acheter</button>
+  </div>
+
+  <div class="product">
+    <h2>Produit 3</h2>
+    <p>Prix: 50€</p>
+    <button onclick="alert('Produit ajouté au panier')">Acheter</button>
+  </div>
+</section>
+
+<footer>
+<p>Contact: contact@maboutique.com</p>
+</footer>
+
+</body>
+</html>
