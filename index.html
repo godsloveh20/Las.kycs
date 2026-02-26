@@ -3,79 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ma Boutique</title>
+<title>Las.kys | T-shirts Personnalisés</title>
+
 <style>
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  background: #f4f4f4;
+  font-family: Arial, sans-serif;
+  background: #f8f9fa;
 }
+
 header {
-  background: #111;
+  background: black;
   color: white;
-  padding: 15px;
-  text-align: center;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.cart {
+  background: white;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.hero {
+  text-align: center;
+  padding: 50px 20px;
+  background: linear-gradient(to right, #111, #333);
+  color: white;
+}
+
 .products {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  padding: 20px;
+  padding: 40px;
 }
+
 .product {
   background: white;
-  padding: 15px;
+  padding: 20px;
   border-radius: 10px;
   text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
+
+.product img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
 button {
   background: black;
   color: white;
-  padding: 10px 15px;
+  padding: 10px 20px;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
+
 button:hover {
   background: #444;
 }
+
 footer {
-  text-align: center;
-  padding: 15px;
-  background: #111;
+  background: black;
   color: white;
+  text-align: center;
+  padding: 20px;
 }
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>Ma Boutique</h1>
-<p>Bienvenue dans notre boutique en ligne</p>
+  <div class="logo">Las.kys</div>
+  <div class="cart">Panier 🛒 : <span id="cart-count">0</span></div>
 </header>
+
+<section class="hero">
+  <h1>T-shirts Personnalisés Las.kys</h1>
+  <p>Style unique. Qualité premium. Livraison rapide.</p>
+</section>
 
 <section class="products">
   <div class="product">
-    <h2>Produit 1</h2>
-    <p>Prix: 20€</p>
-    <button onclick="alert('Produit ajouté au panier')">Acheter</button>
+    <img src="tshirt1.jpg" alt="T-shirt noir Las.kys">
+    <h2>T-shirt Noir Minimal</h2>
+    <p class="price">29,99€</p>
+    <button onclick="addToCart()">Ajouter au panier</button>
   </div>
 
   <div class="product">
-    <h2>Produit 2</h2>
-    <p>Prix: 35€</p>
-    <button onclick="alert('Produit ajouté au panier')">Acheter</button>
+    <img src="tshirt2.jpg" alt="T-shirt blanc Las.kys">
+    <h2>T-shirt Blanc Street</h2>
+    <p class="price">34,99€</p>
+    <button onclick="addToCart()">Ajouter au panier</button>
   </div>
 
   <div class="product">
-    <h2>Produit 3</h2>
-    <p>Prix: 50€</p>
-    <button onclick="alert('Produit ajouté au panier')">Acheter</button>
+    <img src="tshirt3.jpg" alt="T-shirt beige Las.kys">
+    <h2>T-shirt Beige Luxe</h2>
+    <p class="price">39,99€</p>
+    <button onclick="addToCart()">Ajouter au panier</button>
   </div>
 </section>
 
 <footer>
-<p>Contact: contact@maboutique.com</p>
+  <p>Contact : kylianengoki@gmail.com</p>
+  <p>© 2026 Las.kys - Tous droits réservés</p>
 </footer>
+
+<script>
+let cart = 0;
+function addToCart() {
+  cart++;
+  document.getElementById("cart-count").textContent = cart;
+}
+</script>
 
 </body>
 </html>
